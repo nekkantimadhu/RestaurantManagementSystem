@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Staff Dashboard</title>
+    <style>
+        body {
+            background-color: #f7f3e9;
+            color: #333;
+        }
+        .dashboard-container {
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #e1e1e1;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .header {
+            background-color: #FF6F61;
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+        .order-card {
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            width: calc(30% - 20px);
+            height: 150px;
+            text-align: center;
+        }
+        .order-card:hover {
+            transform: scale(1.05);
+        }
+        .prepared {
+            background-color: #ffaf3f ;
+            color: white;
+        }
+        .served {
+            background-color: #ff4c4c;
+            color: white;
+        }
+        .order-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="card">
+            <div class="header">
+                <h2>Staff Dashboard</h2>
+            </div>
+    
+            <!-- Pending Orders to Serve -->
+            <div class="pending-orders">
+                <h5><i class="icon fas fa-utensils"></i>Prepared Orders</h5>
+                <div class="d-flex flex-wrap">
+                    {% for order in prepared_orders %}
+                    <div class="order-card pending" id="order-{{ order.order_id }}">
+                        <div>
+                            <strong>Order #{{ order.order_id }}</strong><br>
+                            {{ order.menu_item_name }} ({{ order.quantity }} items)
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="markAsServed({{ order.order_id }})">Mark as Served</button>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">No prepared orders.</div>
+                    {% endfor %}
+                </div>
+            </div>
+    
+            <!-- Served Orders Waiting for Payment -->
+            <div class="served-orders">
+                <h5><i class="icon fas fa-credit-card"></i>Served Orders Waiting for Payment</h5>
+                <div class="d-flex flex-wrap">
+                    {% for order in served_orders %}
+                    <div class="order-card prepared" id="order-{{ order.order_id }}">
+                        <div>
+                            <strong>Order #{{ order.order_id }}</strong><br>
+                            {{ order.menu_item_name }} ({{ order.quantity }} items) - {{ order.amount }}$
+                            <br><strong>Customer:</strong> {{ order.customer_name }}
+                        </div>
+                        <button class="btn btn-primary" onclick="markAsCompleted({{ order.order_id }})">Mark as Complete</button>
+                        <!-- <button class="btn btn-success btn-sm" onclick="promptPayment({{ order.order_id }}, {{ order.amount }})">Mark as Completed</button> -->
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">No served orders waiting for payment.</div>
+                    {% endfor %}
+                    <!-- Modal for Payment Entry -->
+                    <div id="paymentModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h3>Complete Payment</h3>
+                            <form id="paymentForm" action="/mark_as_completed" method="POST">
+                                <input type="hidden" id="order_id" name="order_id" value="">
+                                <label for="payment_id">Payment ID:</label>
+                                <input type="text" id="payment_id" name="payment_id" required>
+                                <label for="payment_method">Payment Method:</label>
+                                <input type="text" id="payment_method" name="payment_method" required>
+                                <label for="amount">Amount:</label>
+                                <input type="number" step="0.01" id="amount" name="amount" readonly>
+                                <button type="submit" class="btn btn-success">Submit Payment</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function markAsServed(orderId) {
+            if (confirm("Are you sure you want to mark this order as served?")) {
+                fetch(`/mark_as_served/${orderId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        
+                        // Move the order to the "Served Orders" section
+                        let orderCard = document.getElementById(`order-${orderId}`);
+                        
+                        // Update the styles to indicate the order is now served
+                        orderCard.classList.remove('pending');
+                        orderCard.classList.add('prepared');
+
+                        // Remove the old "Mark as Served" button
+                        let oldButton = orderCard.querySelector('button');
+                        oldButton.remove();
+
+                        // Add the new "Mark as Complete" button
+                        let newButton = document.createElement('button');
+                        newButton.className = 'btn btn-primary';
+                        newButton.innerText = 'Mark as Complete';
+                        newButton.onclick = function() {
+                            markAsCompleted(orderId);
+                        };
+                        orderCard.appendChild(newButton);
+
+                        // Append the order card to the served orders section
+                        document.querySelector('.served-orders .d-flex').appendChild(orderCard);
+                    }
+                });
+            }
+        }
+
+
+        function markAsCompleted(orderId) {
+            // Option 1: Fetch order details via AJAX
+            fetch(`/get_order_details/${orderId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Pre-fill payment form
+                    document.getElementById('order_id').value = orderId;
+                    document.getElementById('payment_id').value = data.payment_id;  // If available, otherwise generate it dynamically
+                    document.getElementById('payment_method').value = '';  // Leave for the user to fill
+                    document.getElementById('amount').value = data.amount;
+                    
+                    // Show the payment modal
+                    document.getElementById('paymentModal').style.display = 'block';
+                } else {
+                    alert("Error fetching order details.");
+                }
+            });
+
+            // Option 2: If the amount is embedded in the HTML button using data attributes
+            /*
+            const button = document.querySelector(`#complete-btn-${orderId}`);
+            const amount = button.getAttribute('data-amount');  // Example: data-amount="20.00"
+            document.getElementById('order_id').value = orderId;
+            document.getElementById('amount').value = amount;
+            document.getElementById('paymentModal').style.display = 'block';
+            */
+        }
+
+
+        // Handle Payment Form Submission
+        document.getElementById('paymentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const orderId = document.getElementById('order_id').value;
+            const paymentId = document.getElementById('payment_id').value;
+            const paymentMethod = document.getElementById('payment_method').value;
+            const amount = document.getElementById('amount').value;
+
+            fetch(`/mark_as_completed/${orderId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ payment_id: paymentId, payment_method: paymentMethod, amount: amount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    document.getElementById('paymentModal').style.display = 'none';
+                    document.getElementById(`order-${orderId}`).remove();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('paymentModal')) {
+                document.getElementById('paymentModal').style.display = 'none';
+            }
+        }
+
+        // Close modal when clicking the close button
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+    </script>
+    
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Staff Dashboard</title>
+    <style>
+        body {
+            background-color: #f7f3e9;
+            color: #333;
+        }
+        .dashboard-container {
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #e1e1e1;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .header {
+            background-color: #FF6F61;
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+        .order-card {
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            transition: transform 0.3s;
+            width: calc(30% - 20px);
+            height: 150px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .order-card:hover {
+            transform: scale(1.05);
+        }
+        .pending {
+            background-color: #ffaf3f;
+            color: white;
+        }
+        .prepared {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .order-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>

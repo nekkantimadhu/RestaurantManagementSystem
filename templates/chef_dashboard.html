@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> <!-- Use a common style.css -->
+    <title>Chef Dashboard</title>
+    <style>
+        body {
+            background-color: #f7f3e9; /* Cream background */
+            color: #333;
+        }
+        .dashboard-container {
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #FFFFFF; /* White card background */
+            border: 1px solid #e1e1e1; /* Light border for cards */
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%; /* Full width for cards */
+        }
+        .header {
+            background-color: #FF6F61; /* Green header */
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+        .header h2, .header h5 {
+            margin: 0;
+        }
+        .pending-orders {
+            padding: 15px;
+        }
+        .order-card {
+            margin: 10px; /* Margin for spacing */
+            padding: 15px;
+            border-radius: 10px;
+            transition: background-color 0.3s; /* Animation effect */
+            display: inline-block; /* Allow horizontal alignment */
+            width: calc(30% - 20px); /* Adjust width for horizontal layout */
+            height: 100px;
+            text-align: center;
+        }
+        .order-card:hover {
+            transform: scale(1.05);
+        }
+        .order-icon {
+            width: 60px; /* Icon width */
+            height: 60px; /* Icon height */
+            margin-bottom: 10px; /* Spacing below the icon */
+        }
+        .pending {
+            background-color: #d9534f; /* Red for pending */
+            color: white;
+        }
+        .prepared {
+            background-color: #5cb85c; /* Green for prepared */
+            color: white;
+        }
+        .inventory {
+            padding: 15px;
+        }
+        table {
+            width: 100%;
+        }
+        th, td {
+            text-align: center;
+        }
+        .icon {
+            font-size: 20px; /* Larger icon size */
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <div class="card">
+            <div class="header">
+                <h2>Chef Dashboard</h2>
+            </div>
+            <div class="pending-orders">
+                <h5><i class="icon fas fa-utensils"></i>Pending Orders</h5>
+                <div class="d-flex flex-wrap">
+                    <!-- Loop through pending orders -->
+                    {% for order in pending_orders %}
+                    <div class="order-card pending" id="order-{{ order.order_id }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Order #{{ order.order_id }}</strong><br>
+                                {{ order.menu_item_name }} ({{ order.quantity }} items)
+                            </div>
+                            <button class="btn btn-success btn-sm" onclick="markAsPrepared({{ order.order_id }})">Mark as Prepared</button>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">No pending orders.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+    
+        <div class="card">
+            <div class="header">
+                <h5><i class="icon fas fa-box"></i>Inventory Stock</h5>
+            </div>
+            <div class="inventory">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through inventory stock -->
+                        {% for stock in inventory_stock %}
+                        <tr>
+                            <td>{{ stock['item_name'] }}</td>
+                            <td>{{ stock['quantity'] }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center">No inventory items available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    
+
+<script>
+    function markAsPrepared(orderId) {
+        // Function to mark an order as prepared
+        if (confirm("Are you sure you want to mark this order as prepared?")) {
+            // Make an AJAX call to update the order status
+            fetch(`/prepare_order/${orderId}`, {
+                method: 'POST',
+            }).then(response => {
+                if (response.ok) {
+                    // Change the order card to indicate it is prepared
+                    const orderCard = document.getElementById(`order-${orderId}`);
+                    orderCard.classList.remove('pending');
+                    orderCard.classList.add('prepared');
+                    orderCard.innerHTML += `<div class="text-right">Prepared!</div>`;
+                    alert("Order marked as prepared!");
+
+                    // Remove the card after 10 seconds
+                    setTimeout(() => {
+                        orderCard.remove();
+                    }, 10000);
+                } else {
+                    alert("An error occurred while marking the order.");
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>
+
+
+

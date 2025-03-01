@@ -1,0 +1,25 @@
+<form method="POST" action="/place_order">
+    <div class="form-group">
+        <label for="menu_id">Menu Item:</label>
+        <select name="menu_id" class="form-control">
+            {% for item in menu_items %}
+            <option value="{{ item.menu_id }}">{{ item.name }} - ${{ item.price }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Place Order</button>
+</form>
+
+
+<form method="POST" action="{{ url_for('place_order', menu_id=menu_id) }}">
+    <input type="hidden" name="customer_id" value="{{ customer_id }}">
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Place Order</button>
+</form>

@@ -1,0 +1,796 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"> <!-- Bootstrap Icons -->
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- jQuery and Bootstrap JS -->
+    
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f7f3e9; /* Light cream background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        h1, h3 {
+            color: #333;
+        }
+
+        /* Navbar/Heading Section */
+        .header {
+            background-color: #FF6F61; /* Swiggy-style orange */
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Top Section Navigation Cards */
+        .nav-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .nav-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 10px;
+            transition: transform 0.3s;
+        }
+
+        .nav-card:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-card h4 {
+            color: #FF6F61;
+            margin-bottom: 10px;
+        }
+
+        /* Section Styling */
+        .dashboard-section {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-section h3 {
+            color: #FF6F61;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FF6F61;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            background-color: #f7f7f7;
+        }
+
+        /* Table Styling */
+        .table-container {
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #FF6F61;
+            color: white;
+        }
+
+        td {
+            background-color: #fefefe;
+            color: #333;
+        }
+
+        /* Inventory Carousel */
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin: 20px 0;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            text-align: center;
+            flex: 0 0 300px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h4 {
+            color: #FF6F61;
+            margin-bottom: 10px;
+        }
+
+        /* Smooth scrolling for the cards */
+        html {
+            scroll-behavior: smooth;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
+            gap: 20px; /* Space between the cards */
+            margin-top: 20px; /* Space above the grid */
+        }
+
+        .menu-card {
+            background-color: #f9f9f9; /* Light background for cards */
+            border-radius: 15px; /* Rounded corners */
+            padding: 20px; /* Inner spacing */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+            text-align: center; /* Centered text */
+            transition: transform 0.2s; /* Animation for hover effect */
+        }
+
+        .menu-card:hover {
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
+        .menu-image {
+            max-width: 100%; /* Responsive image */
+            border-radius: 10px; /* Rounded image corners */
+            margin-bottom: 10px; /* Space below the image */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+
+        <div class="container" >
+        <!-- Navigation Cards Section -->
+        <div class="nav-cards">
+            <div class="nav-card" onclick="document.getElementById('inventory-section').scrollIntoView()">
+                <i class="bi bi-box"></i>
+                <h4>Inventory</h4>
+            </div>
+            <div class="nav-card" onclick="document.getElementById('employee-section').scrollIntoView()">
+                <i class="bi bi-person-plus"></i>
+                <h4>Add Employee</h4>
+            </div>
+            <div class="nav-card" onclick="document.getElementById('menu-section').scrollIntoView()">
+                <i class="bi bi-list-ul"></i>
+                <h4>Menu</h4>
+            </div>
+            <div class="nav-card" onclick="document.getElementById('payments-section').scrollIntoView()">
+                <i class="bi bi-cash-coin"></i>
+                <h4>Payments</h4>
+            </div>
+            <div class="nav-card" onclick="document.getElementById('orders-section').scrollIntoView()">
+                <i class="bi bi-receipt"></i>
+                <h4>Orders</h4>
+            </div>
+        </div>
+    </div>
+        <!-- Inventory Section -->
+        
+
+
+
+        <!-- Inventory Section -->
+<!-- Inventory Section -->
+<div id="inventory-section" class="dashboard-section">
+    <h3>Inventory List</h3>
+    <div class="carousel">
+        {% for item in inventory %}
+            <div class="card">
+                <h4>{{ item.item_name }}</h4>
+                <p id="quantity-{{ loop.index }}">Quantity: {{ item.quantity }}</p>
+                <button class="btn" data-toggle="modal" data-target="#updateInventoryModal{{ loop.index }}">Update Stock</button>
+
+                <!-- Update Inventory Modal -->
+                <div class="modal fade" id="updateInventoryModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="updateInventoryModalLabel{{ loop.index }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <form id="updateInventoryForm{{ loop.index }}" class="update-inventory-form" data-item-name="{{ item.item_name }}" data-index="{{ loop.index }}">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="updateInventoryModalLabel{{ loop.index }}">Update Inventory Item</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="itemQuantity">Quantity</label>
+                                        <input type="number" class="form-control" name="quantity" value="{{ item.quantity }}" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+        <!-- Employee Section -->
+        <!-- <div id="employee-section" class="dashboard-section">
+            <h3>Employee List</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>EmpID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.user_id }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td>
+                            <button class="btn">Update</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <br>
+
+            <h3>Add New Employee</h3>
+            <form method="POST" action="/add_employee">
+                <div class="form-group">
+                    <label for="employeeName">Name</label>
+                    <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeeEmail">Email</label>
+                    <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeeId">Employee ID</label>
+                    <input type="number" class="form-control" id="employeeID" name="employee_id" required>
+                </div>
+                <button type="submit" class="btn">Add Employee</button>
+            </form>
+        </div> -->
+
+
+
+        <!-- Employee Section -->
+<!-- <div id="employee-section" class="dashboard-section">
+    <h3>Employee List</h3>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>EmpID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.user_id }}</td>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.email }}</td>
+                <td>
+                    <button class="btn" data-toggle="modal" data-target="#updateEmployeeModal{{ employee.user_id }}">Update</button>
+                </td>
+            </tr> -->
+
+            <!-- Update Employee Modal -->
+            <!-- <div class="modal fade" id="updateEmployeeModal{{ employee.user_id }}" tabindex="-1" role="dialog" aria-labelledby="updateEmployeeModalLabel{{ employee.user_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form method="POST" action="/update_employee/{{ employee.user_id }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateEmployeeModalLabel{{ employee.user_id }}">Update Employee Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="employeeName">Name</label>
+                                    <input type="text" class="form-control" name="employee_name" value="{{ employee.name }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="employeeEmail">Email</label>
+                                    <input type="email" class="form-control" name="employee_email" value="{{ employee.email }}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </table>
+    </div>
+    <br>
+
+    <h3>Add New Employee</h3>
+    <form method="POST" action="/add_employee">
+        <div class="form-group">
+            <label for="employeeName">Name</label>
+            <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+        </div>
+        <div class="form-group">
+            <label for="employeeEmail">Email</label>
+            <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+        </div>
+        <div class="form-group">
+            <label for="employeeId">Employee ID</label>
+            <input type="number" class="form-control" id="employeeID" name="employee_id" required>
+        </div>
+        <button type="submit" class="btn">Add Employee</button>
+    </form>
+</div> -->
+
+<div id="employee-section" class="dashboard-section">
+    <h3>Employee List</h3>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>EmpID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.user_id }}</td>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.email }}</td>
+                <td>
+                    <button class="btn" data-toggle="modal" data-target="#updateEmployeeModal{{ employee.user_id }}">Update</button>
+                </td>
+            </tr>
+
+            <!-- Update Employee Modal -->
+            <div class="modal fade" id="updateEmployeeModal{{ employee.user_id }}" tabindex="-1" role="dialog" aria-labelledby="updateEmployeeModalLabel{{ employee.user_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form method="POST" action="/update_employee/{{ employee.user_id }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateEmployeeModalLabel{{ employee.user_id }}">Update Employee Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="employeeName">Name</label>
+                                    <input type="text" class="form-control" name="employee_name" value="{{ employee.name }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="employeeEmail">Email</label>
+                                    <input type="email" class="form-control" name="employee_email" value="{{ employee.email }}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </table>
+    </div>
+    <br>
+
+    <h3>Add New Employee</h3>
+    <form method="POST" action="/add_employee">
+        <div class="form-group">
+            <label for="employeeName">Name</label>
+            <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+        </div>
+        <div class="form-group">
+            <label for="employeeEmail">Email</label>
+            <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+        </div>
+        <div class="form-group">
+            <label for="employeeId">Employee ID</label>
+            <input type="number" class="form-control" id="employeeID" name="employee_id" required>
+        </div>
+        <button type="submit" class="btn">Add Employee</button>
+    </form>
+</div>
+
+
+
+        <!-- Menu Section -->
+         upadate
+
+        <!-- Menu Section -->
+<div id="menu-section" class="dashboard-section">
+    <h3>Menu Items</h3>
+    <div class="menu-grid">
+        {% for menu_item in menu %}
+            <div class="card menu-card">
+                <h4>{{ menu_item['name'] }}</h4>
+                <p>Price: ${{ menu_item['price'] }}</p>
+                <p>{{ menu_item['description'] }}</p>
+                {% if menu_item['image_url'] %}
+                    <img src="{{ menu_item['image_url'] }}" alt="{{ menu_item['name'] }}" class="menu-image" />
+                {% endif %}
+                <button class="btn" data-toggle="modal" data-target="#editMenuModal{{ menu_item['menu_id'] }}">Edit Item</button>
+            </div>
+
+            <!-- Edit Menu Item Modal -->
+            <div class="modal fade" id="editMenuModal{{ menu_item['menu_id'] }}" tabindex="-1" role="dialog" aria-labelledby="editMenuModalLabel{{ menu_item['menu_id'] }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form method="POST" action="/update_menu/{{ menu_item['menu_id'] }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editMenuModalLabel{{ menu_item['menu_id'] }}">Edit Menu Item</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="itemName">Item Name</label>
+                                    <input type="text" class="form-control" id="itemName" name="item_name" value="{{ menu_item['name'] }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="itemPrice">Item Price</label>
+                                    <input type="number" class="form-control" id="itemPrice" name="item_price" value="{{ menu_item['price'] }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="itemDescription">Item Description</label>
+                                    <textarea class="form-control" id="itemDescription" name="item_description" required>{{ menu_item['description'] }}</textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <br>
+    <h3>Add New Menu Item</h3>
+    <form method="POST" action="/add_menu_item">
+        <div class="form-group">
+            <label for="itemName">Item Name</label>
+            <input type="text" class="form-control" id="itemName" name="item_name" required>
+        </div>
+        <div class="form-group">
+            <label for="itemPrice">Item Price</label>
+            <input type="number" class="form-control" id="itemPrice" name="item_price" required>
+        </div>
+        <div class="form-group">
+            <label for="itemDescription">Item Description</label>
+            <textarea class="form-control" id="itemDescription" name="item_description" required></textarea>
+        </div>
+        <button type="submit" class="btn">Add Item</button>
+    </form>
+</div>
+
+        
+
+
+
+    
+
+        <!-- Orders Section -->
+        <!-- <div id="orders-section" class="dashboard-section">
+            <h3>Order List</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Order Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>
+                            <button class="btn">Update Order</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div> -->
+
+
+
+
+        <!-- Orders Section -->
+<div id="orders-section" class="dashboard-section">
+    <h3>Order List</h3>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Order Status</th>
+                <th>Actions</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.order_id }}</td>
+                <td>{{ order.customer_id }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    <button class="btn" data-toggle="modal" data-target="#updateOrderModal{{ order.order_id }}">Update Order</button>
+                </td>
+            </tr>
+
+            <!-- Update Order Modal -->
+            <div class="modal fade" id="updateOrderModal{{ order.order_id }}" tabindex="-1" role="dialog" aria-labelledby="updateOrderModalLabel{{ order.order_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form method="POST" action="/update_order/{{ order.order_id }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateOrderModalLabel{{ order.order_id }}">Update Order Status</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="orderStatus">Order Status</label>
+                                    <select class="form-control" name="order_status" required>
+                                        <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="Completed" {% if order.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                        <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+        <!-- Payments Section -->
+        <div id="payments-section" class="dashboard-section">
+            <h3>Payments</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Payment ID</th>
+                        <th>Order ID</th>
+                        <th>Customer ID</th>
+                        <th>Amount</th>
+                    </tr>
+                    {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.payment_id }}</td>
+                        <td>{{ payment.order_id }}</td>
+                        <td>{{ payment.customer_id }}</td>
+                        <td>${{ payment.amount }}</td>
+                        
+                        
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+   <!-- <script>
+        // Optional: If you need to perform any actions on modal show or hide
+        $('.modal').on('show.bs.modal', function (event) {
+            // You can put any logic you need here before the modal shows
+        });
+
+        $('.modal').on('hide.bs.modal', function (event) {
+            // You can put any logic you need here before the modal hides
+        });
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle update inventory form submission
+        const inventoryForms = document.querySelectorAll('.update-inventory-form');
+
+        inventoryForms.forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                const itemId = this.dataset.itemId;
+                const quantity = this.querySelector('input[name="quantity"]').value;
+
+                // Send the update request to the server
+                fetch(`/update_inventory/${itemId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ quantity: quantity })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Hide the modal and refresh the page to show updated data
+                        $('#updateInventoryModal' + itemId).modal('hide');
+                        location.reload(); // Reload the page to see changes
+                    } else {
+                        alert('Failed to update inventory');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+</script>-->
+
+<script>
+    $(document).ready(function() {
+    $('.update-inventory-form').submit(function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        e.stopPropagation(); // Stop event bubbling to avoid multiple triggering
+
+        let form = $(this);
+        let itemName = form.data('item-name');
+        let quantity = form.find('input[name="quantity"]').val();
+        let index = form.data('index');
+
+        // Disable the button to prevent multiple clicks
+        form.find('button[type="submit"]').prop('disabled', true);
+
+        $.ajax({
+            url: '/update_inventory/' + itemName,
+            type: 'POST',
+            data: { quantity: quantity },
+            success: function(response) {
+                $('#quantity-' + index).text('Quantity: ' + quantity);  // Update the quantity on the page
+                $('#updateInventoryModal' + index).modal('hide');  // Hide the modal
+                
+                // Re-enable the submit button after success
+                form.find('button[type="submit"]').prop('disabled', false);
+            },
+            error: function() {
+                alert('Failed to update inventory. Please try again.');
+                // Re-enable the submit button if there's an error
+                form.find('button[type="submit"]').prop('disabled', false);
+            }
+        });
+    });
+});
+
+
+
+</script>
+</body>
+</html>
+
+

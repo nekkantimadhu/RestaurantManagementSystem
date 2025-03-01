@@ -1,0 +1,27 @@
+<script>
+    function alertFoodPrepared() {
+        alert('Your food is ready!');
+    }
+</script>
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Menu Item</th>
+            <th>Quantity</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.menu_item_name }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

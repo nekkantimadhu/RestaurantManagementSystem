@@ -1,0 +1,108 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #2B2B2B; /* Dark theme background */
+    color: #F2F2F2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Navigation Bar */
+.navbar {
+    width: 100%;
+    background-color: #FF5722; /* Zomato-like bright orange */
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo h1 {
+    color: white;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    list-style: none;
+}
+
+.nav-links li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.nav-links li a.active {
+    background-color: #F44336; /* Active page, Swiggy-like red */
+    border-radius: 4px;
+}
+
+/* Dashboard Content */
+.dashboard {
+    margin-top: 50px;
+    width: 80%;
+    text-align: center;
+}
+
+.dashboard h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: #FF9800; /* Zomato/Swiggy highlight color */
+}
+
+.order-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.order-card {
+    background-color: #424242;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    color: white;
+}
+
+.order-card h3 {
+    color: #FFEB3B; /* Bright yellow for order ID */
+    font-size: 24px;
+}
+
+.order-card p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.mark-ready-btn {
+    background-color: #4CAF50; /* Green for Mark Ready */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.mark-ready-btn:hover {
+    background-color: #45a049;
+}

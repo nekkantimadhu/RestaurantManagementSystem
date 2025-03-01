@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make Payment</title>
+</head>
+<body>
+    <h1>Make Payment</h1>
+    <form action="/make_payment" method="POST">
+        Customer ID: <input type="text" name="customer_id"><br>
+        Order ID: <input type="text" name="order_id"><br>
+        Amount: <input type="text" name="amount"><br>
+        Payment Method:
+        <select name="payment_method">
+            <option value="QR">QR</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+        </select><br>
+        <input type="submit" value="Make Payment">
+    </form>
+</body>
+</html>
+
+
+<form method="POST" action="/make_payment">
+    <input type="hidden" name="order_id" value="{{ order_id }}">
+    <div class="form-group">
+        <label for="amount">Amount:</label>
+        <input type="number" name="amount" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="payment_method">Payment Method:</label>
+        <select name="payment_method" class="form-control">
+            <option value="QR">QR Code</option>
+            <option value="Reception">Reception</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Pay Now</button>
+</form>

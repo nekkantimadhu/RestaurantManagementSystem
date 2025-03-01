@@ -1,0 +1,4084 @@
+admin.html 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <section id="inventory">
+        <h2>Inventory</h2>
+        <!-- Inventory table -->
+        <ul>
+            {% for item in inventory %}
+                <li>{{ item.item_name }} - {{ item.quantity }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    <section id="employees">
+        <h2>Employees</h2>
+        <!-- Employee management -->
+        <ul>
+            {% for employee in employees %}
+                <li>{{ employee.name }} - {{ employee.role }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    <section id="payments">
+        <h2>Payments</h2>
+        <!-- Payment records -->
+    </section>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <h2>Add Menu Item</h2>
+    <form action="/add_menu_item" method="POST">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="text" name="description" placeholder="Description" required>
+        <input type="number" step="0.01" name="price" placeholder="Price" required>
+        <input type="text" name="image_url" placeholder="Image URL" required>
+        <input type="submit" value="Add">
+    </form>
+
+    <h2>Menu Items</h2>
+    <ul>
+        {% for item in menu_items %}
+        <li>
+            {{ item.name }} - <form action="/delete_menu_item/{{ item.menu_id }}" method="POST" style="display:inline;">
+            <input type="submit" value="Delete">
+            </form></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
+<!-- <! new code-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Admin Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+        <!-- Inventory Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h3>Inventory</h3>
+                <ul class="list-group">
+                    {% for item in inventory %}
+                    <li class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
+                        {{ item['item_name'] }} (Quantity: {{ item['quantity'] }})
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Staff Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h3>Staff Members</h3>
+                <ul class="list-group">
+                    {% for staff in staff_list %}
+                    <li class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
+                        {{ staff['name'] }} - {{ staff['role'] }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h3>Recent Payments</h3>
+                <ul class="list-group">
+                    {% for payment in payments %}
+                    <li class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
+                        Customer ID: {{ payment['customer_id'] }} - ${{ payment['amount'] }} - {{ payment['payment_status'] }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Add Employee Form -->
+            <div class="col-md-6">
+                <h3>Add New Employee</h3>
+                <form method="POST" action="/add_employee">
+                    <div class="mb-3">
+                        <label for="employeeName" class="form-label">Name</label>
+                        <input type="text" class="form-control bg-dark text-white" id="employeeName" name="employee_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="employeeEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control bg-dark text-white" id="employeeEmail" name="employee_email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userId" class="form-label">User ID</label>
+                        <input type="number" class="form-control bg-dark text-white" id="userId" name="user_id" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Employee</button>
+                </form>
+            </div>
+
+            <!-- Add Menu Item Form -->
+            <div class="col-md-6">
+                <h3>Add New Menu Item</h3>
+                <form method="POST" action="/add_menu_item">
+                    <div class="mb-3">
+                        <label for="itemName" class="form-label">Item Name</label>
+                        <input type="text" class="form-control bg-dark text-white" id="itemName" name="item_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="itemPrice" class="form-label">Price</label>
+                        <input type="number" class="form-control bg-dark text-white" id="itemPrice" name="item_price" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Menu Item</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        h1, h3 {
+            color: #FFFFFF;
+        }
+
+        /* Navbar/Heading Section */
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .dashboard-section {
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #2B2B2B;
+            color: #FF4B2B;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        table tr {
+            background-color: #1A1A1A;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #222222;
+        }
+
+        table td {
+            color: #EAEAEA;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FF4B2B;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+
+        .btn {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #FF6936;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Styling for card-like layout */
+        .card {
+            background-color: #1E1E1E;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .add-section {
+            margin-bottom: 40px;
+        }
+
+        .add-section h3 {
+            font-size: 20px;
+            color: #FF4B2B;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <!-- Inventory Section -->
+        <div class="dashboard-section">
+            <h3>Inventory List</h3>
+            <table>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+                {% for item in inventory %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Employees Section -->
+        <div class="dashboard-section">
+            <h3>Employee List</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.email }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Add Employee Form -->
+            <div class="add-section">
+                <h3>Add New Employee</h3>
+                <form method="POST" action="/add_employee">
+                    <div class="form-group">
+                        <label for="employeeName">Name</label>
+                        <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeEmail">Email</label>
+                        <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="number" class="form-control" id="userId" name="user_id" required>
+                    </div>
+                    <button type="submit" class="btn">Add Employee</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="dashboard-section">
+            <h3>Menu Items</h3>
+            <table>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                </tr>
+                {% for item in menu_items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>${{ item.price }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Add Menu Item Form -->
+            <div class="add-section">
+                <h3>Add New Menu Item</h3>
+                <form method="POST" action="/add_menu_item">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" class="form-control" id="itemName" name="item_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrice">Item Price</label>
+                        <input type="number" class="form-control" id="itemPrice" name="item_price" required>
+                    </div>
+                    <button type="submit" class="btn">Add Menu Item</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div class="dashboard-section">
+            <h3>Payments</h3>
+            <table>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_id }}</td>
+                    <td>${{ payment.amount }}</td>
+                    <td>{{ payment.date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        h1, h3 {
+            color: #FFFFFF;
+        }
+
+        /* Navbar/Heading Section */
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .dashboard-section {
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #1E1E1E;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            text-align: center;
+            flex: 0 0 300px; /* Fixed card width */
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h4 {
+            color: #FF4B2B;
+            margin-bottom: 10px;
+        }
+
+        /* Carousel */
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #FF6936;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FF4B2B;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+
+        .add-section {
+            margin-bottom: 40px;
+        }
+
+        .add-section h3 {
+            font-size: 20px;
+            color: #FF4B2B;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <!-- Inventory Section -->
+        <div class="dashboard-section">
+            <h3>Inventory List</h3>
+            <div class="carousel">
+                {% for item in inventory %}
+                <div class="card">
+                    <h4>{{ item.name }}</h4>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Price: ${{ item.price }}</p>
+                    <button class="btn">Update Stock</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Employees Section -->
+        <div class="dashboard-section">
+            <h3>Employee List</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.email }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Add Employee Form -->
+            <div class="add-section">
+                <h3>Add New Employee</h3>
+                <form method="POST" action="/add_employee">
+                    <div class="form-group">
+                        <label for="employeeName">Name</label>
+                        <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeEmail">Email</label>
+                        <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="number" class="form-control" id="userId" name="user_id" required>
+                    </div>
+                    <button type="submit" class="btn">Add Employee</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="dashboard-section">
+            <h3>Menu Items</h3>
+            <div class="carousel">
+                {% for menu_item in menu_items %}
+                <div class="card">
+                    <h4>{{ menu_item.name }}</h4>
+                    <p>Price: ${{ menu_item.price }}</p>
+                    <button class="btn">Edit Item</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Add Menu Item Form -->
+            <div class="add-section">
+                <h3>Add New Menu Item</h3>
+                <form method="POST" action="/add_menu_item">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" class="form-control" id="itemName" name="item_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrice">Item Price</label>
+                        <input type="number" class="form-control" id="itemPrice" name="item_price" required>
+                    </div>
+                    <button type="submit" class="btn">Add Menu Item</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div class="dashboard-section">
+            <h3>Payments</h3>
+            <table>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_id }}</td>
+                    <td>${{ payment.amount }}</td>
+                    <td>{{ payment.date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</body>
+</html> 
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        h1, h3 {
+            color: #FFFFFF;
+        }
+
+        /* Navbar/Heading Section */
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .dashboard-section {
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #1E1E1E;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            text-align: center;
+            flex: 0 0 300px; /* Fixed card width */
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h4 {
+            color: #FF4B2B;
+            margin-bottom: 10px;
+        }
+
+        /* Carousel */
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #FF6936;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FF4B2B;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+
+        .add-section {
+            margin-bottom: 40px;
+        }
+
+        .add-section h3 {
+            font-size: 20px;
+            color: #FF4B2B;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <!-- Inventory Section -->
+        <div class="dashboard-section">
+            <h3>Inventory List</h3>
+            <div class="carousel">
+                {% for item in inventory %}
+                <div class="card">
+                    <h4>{{ item.name }}</h4>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Price: ${{ item.price }}</p>
+                    <button class="btn">Update Stock</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Employees Section -->
+        <div class="dashboard-section">
+            <h3>Employee List</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.email }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Add Employee Form -->
+            <div class="add-section">
+                <h3>Add New Employee</h3>
+                <form method="POST" action="/add_employee">
+                    <div class="form-group">
+                        <label for="employeeName">Name</label>
+                        <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeEmail">Email</label>
+                        <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="number" class="form-control" id="userId" name="user_id" required>
+                    </div>
+                    <button type="submit" class="btn">Add Employee</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="dashboard-section">
+            <h3>Menu Items</h3>
+            <div class="carousel">
+                {% for menu_item in menu_items %}
+                <div class="card">
+                    <h4>{{ menu_item.name }}</h4>
+                    <p>Price: ${{ menu_item.price }}</p>
+                    <button class="btn">Edit Item</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Add Menu Item Form -->
+            <div class="add-section">
+                <h3>Add New Menu Item</h3>
+                <form method="POST" action="/add_menu_item">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" class="form-control" id="itemName" name="item_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrice">Item Price</label>
+                        <input type="number" class="form-control" id="itemPrice" name="item_price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDescription">Item Description</label>
+                        <textarea class="form-control" id="itemDescription" name="item_description" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Add Menu Item</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div class="dashboard-section">
+            <h3>Payments</h3>
+            <table>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_id }}</td>
+                    <td>${{ payment.amount }}</td>
+                    <td>{{ payment.date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+
+
+new code 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f9f9f9; /* Lighter background */
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #ff4b2b; /* Swiggy/Zomato color */
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-section h3 {
+            color: #ff4b2b;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin: 10px;
+            text-align: center;
+            flex: 0 0 300px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h4 {
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        /* Carousel */
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: #28a745; /* Green for positive actions */
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #218838; /* Darker green for hover */
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #ff4b2b;
+            color: white;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .add-section h3 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <!-- Inventory Section -->
+        <div class="dashboard-section">
+            <h3>Inventory List</h3>
+            <div class="carousel">
+                {% for item in inventory %}
+                <div class="card">
+                    <h4>{{ item.name }}</h4>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Price: ${{ item.price }}</p>
+                    <button class="btn">Update Stock</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Employees Section -->
+        <div class="dashboard-section">
+            <h3>Employee List</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.email }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Add Employee Form -->
+            <div class="add-section">
+                <h3>Add New Employee</h3>
+                <form method="POST" action="/add_employee">
+                    <div class="form-group">
+                        <label for="employeeName">Name</label>
+                        <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeEmail">Email</label>
+                        <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="number" class="form-control" id="userId" name="user_id" required>
+                    </div>
+                    <button type="submit" class="btn">Add Employee</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="dashboard-section">
+            <h3>Menu Items</h3>
+            <div class="carousel">
+                {% for menu_item in menu_items %}
+                <div class="card">
+                    <h4>{{ menu_item.name }}</h4>
+                    <p>Price: ${{ menu_item.price }}</p>
+                    <button class="btn">Edit Item</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Add Menu Item Form -->
+            <div class="add-section">
+                <h3>Add New Menu Item</h3>
+                <form method="POST" action="/add_menu_item">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" class="form-control" id="itemName" name="item_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrice">Item Price</label>
+                        <input type="number" class="form-control" id="itemPrice" name="item_price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDescription">Item Description</label>
+                        <textarea class="form-control" id="itemDescription" name="item_description" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Add Menu Item</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div class="dashboard-section">
+            <h3>Payments</h3>
+            <table>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_id }}</td>
+                    <td>${{ payment.amount }}</td>
+                    <td>{{ payment.date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        h1, h3 {
+            color: #FFFFFF;
+        }
+
+        /* Navbar/Heading Section */
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #292929;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            text-align: center;
+            flex: 0 0 300px; /* Fixed card width */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h4 {
+            color: #FFD700; /* Gold for highlighting menu item names */
+            margin-bottom: 10px;
+        }
+
+        /* Carousel */
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin: 20px 0;
+            gap: 15px;
+        }
+
+        /* Button Styling */
+        .btn {
+            background-color: #28A745; /* Green for action buttons */
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        table th {
+            background-color: #FF4B2B;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        table tr:hover {
+            background-color: #333;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FFD700;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+
+        .add-section {
+            margin-bottom: 40px;
+        }
+
+        .add-section h3 {
+            font-size: 20px;
+            color: #FF4B2B;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <!-- Inventory Section -->
+        <div class="dashboard-section">
+            <h3>Inventory List</h3>
+            <table>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+                {% for item in inventory %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td><button class="btn">Update Stock</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Employees Section -->
+        <div class="dashboard-section">
+            <h3>Employee List</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td><button class="btn">Update</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Add Employee Form -->
+            <div class="add-section">
+                <h3>Add New Employee</h3>
+                <form method="POST" action="/add_employee">
+                    <div class="form-group">
+                        <label for="employeeName">Name</label>
+                        <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeEmail">Email</label>
+                        <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="number" class="form-control" id="userId" name="user_id" required>
+                    </div>
+                    <button type="submit" class="btn">Add Employee</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="dashboard-section">
+            <h3>Menu Items</h3>
+            <div class="carousel">
+                {% for menu_item in menu_items %}
+                <div class="card">
+                    <h4>{{ menu_item.name }}</h4>
+                    <p>Price: ${{ menu_item.price }}</p>
+                    <button class="btn">Edit Item</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Add Menu Item Form -->
+            <div class="add-section">
+                <h3>Add New Menu Item</h3>
+                <form method="POST" action="/add_menu_item">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" class="form-control" id="itemName" name="item_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrice">Item Price</label>
+                        <input type="number" class="form-control" id="itemPrice" name="item_price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDescription">Item Description</label>
+                        <textarea class="form-control" id="itemDescription" name="item_description" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Add Menu Item</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div class="dashboard-section">
+            <h3>Payments</h3>
+            <table>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_id }}</td>
+                    <td>${{ payment.amount }}</td>
+                    <td>{{ payment.date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+cream code 
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8F9FA; /* Cream background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        h1, h3 {
+            color: #333;
+        }
+
+        /* Navbar/Heading Section */
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .dashboard-section {
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            text-align: center;
+            flex: 0 0 300px; /* Fixed card width */
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h4 {
+            color: #FF4B2B;
+            margin-bottom: 10px;
+        }
+
+        /* Carousel */
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #FF6936;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        th {
+            background-color: #FF4B2B;
+            color: white;
+            text-align: left;
+        }
+
+        td {
+            background-color: #fff;
+            text-align: left;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background-color: #F8F9FA;
+            color: #333;
+        }
+
+        .add-section {
+            margin-bottom: 40px;
+        }
+
+        .add-section h3 {
+            font-size: 20px;
+            color: #FF4B2B;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <!-- Inventory Section -->
+        <div class="dashboard-section">
+            <h3>Inventory List</h3>
+            <div class="carousel">
+                {% for item in inventory %}
+                <div class="card">
+                    <h4>{{ item.item_name }}</h4>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Price: ${{ item.price }}</p>
+                    <button class="btn">Update Stock</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Employees Section -->
+        <div class="dashboard-section">
+            <h3>Employee List</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.email }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Add Employee Form -->
+            <div class="add-section">
+                <h3>Add New Employee</h3>
+                <form method="POST" action="/add_employee">
+                    <div class="form-group">
+                        <label for="employeeName">Name</label>
+                        <input type="text" class="form-control" id="employeeName" name="employee_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeEmail">Email</label>
+                        <input type="email" class="form-control" id="employeeEmail" name="employee_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="number" class="form-control" id="userId" name="user_id" required>
+                    </div>
+                    <button type="submit" class="btn">Add Employee</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="dashboard-section">
+            <h3>Menu Items</h3>
+            <div class="carousel">
+                {% for menu_item in menu_items %}
+                <div class="card">
+                    <h4>{{ menu_item.name }}</h4>
+                    <p>Price: ${{ menu_item.price }}</p>
+                    <button class="btn">Edit Item</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Add Menu Item Form -->
+            <div class="add-section">
+                <h3>Add New Menu Item</h3>
+                <form method="POST" action="/add_menu_item">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" class="form-control" id="itemName" name="item_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrice">Item Price</label>
+                        <input type="number" class="form-control" id="itemPrice" name="item_price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDescription">Item Description</label>
+                        <textarea class="form-control" id="itemDescription" name="item_description" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Add Menu Item</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div class="dashboard-section">
+            <h3>Payments</h3>
+            <table>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_id }}</td>
+                    <td>${{ payment.amount }}</td>
+                    <td>{{ payment.date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+customer.html 
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>MadFlavour</title>
+  </head>
+  <body>
+    <style>
+        body {
+          font-family: 'Poppins', sans-serif; /* Apply Poppins font to body */
+          background-color: #f9f9f9;
+          
+          margin: 0; /* Remove default margin */
+        }
+        .hero-section {
+          background-color: rgba(0, 0, 0, 0.5);
+          background-size: cover;
+          background-position: center;
+          height: 400px;
+          color: white;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        
+
+        .hero-section-content {
+        position: relative;
+        z-index: 2; /* Keep text on top of the overlay */
+        color: rgb(0, 0, 0); /* Adjust text color for visibility */
+        text-align: center; /* Center align text */
+        }
+        
+        .hero-section h1 {
+          font-size: 4rem;
+          font-weight: bold;
+          text-shadow: 2px 2px 5px rgba(34, 29, 29, 0.7);
+        }
+        .search-bar {
+          margin-top: 20px;
+        }
+        .collections {
+          padding: 50px 0;
+        }
+        .collection-item {
+          transition: transform 0.3s ease-in-out;
+        }
+        .collection-item:hover {
+          transform: scale(1.05);
+        }
+      </style>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Image and text -->
+<!-- <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    
+    <a class="navbar-brand" href="#">
+      <img src="file:///Users/m.nekkanti/Desktop/dbms/RMS/images/mlogo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      MadFlavour
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Admin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Staff</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Chef</a>
+          </li>
+        </ul>
+      </div>
+
+  </nav> -->
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+    <a class="navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='images/mff.png') }}" width="50" height="50" class="d-inline-block align-top" alt="">
+      </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/customer_dashboard">Customer <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin">Admin</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/staff_dashboard">Staff</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/chef_dashboard">Chef</a>
+          </li>
+        
+      </ul>
+    </div>
+</div>
+  </nav>
+
+
+  <!-- Hero Section -->
+  <section class="hero-section" style="background-image: url('{{ url_for('static', filename='images/main.jpg') }}'); opacity:0.7;">
+    <div class="container">
+        <div class="hero-section-content">
+            <h1>MadFlavour</h1>
+            <p>Discover the best flavours with us</p>
+        </div> 
+      <!-- <form class="row search-bar justify-content-center">
+        <div class="col-md-3">
+          <input type="text" class="form-control" placeholder="Enter location">
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="Search for restaurant, cuisine or dish">
+        </div>
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-danger">Search</button>
+        </div>
+      </form> -->
+    </div>
+  </section>
+
+
+  <!-- Collections Section -->
+  <section class="collections">
+    <div class="container text-center">
+      <h2 class="mb-5">Explore Collections</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card collection-item">
+            <img src="https://source.unsplash.com/400x300/?food-delivery" class="card-img-top" alt="Order Online">
+            <div class="card-body">
+              <h5 class="card-title">Order Online</h5>
+              <p class="card-text">Stay home and order to your doorstep</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card collection-item">
+            <img src="https://source.unsplash.com/400x300/?dining" class="card-img-top" alt="Dining">
+            <div class="card-body">
+              <h5 class="card-title">Dining</h5>
+              <p class="card-text">View the city's favourite dining venues</p>
+              <a href="/book_table">Book a Table</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card collection-item">
+            <img src="https://source.unsplash.com/400x300/?concert" class="card-img-top" alt="Live Events">
+            <div class="card-body">
+              <h5 class="card-title">Live Events</h5>
+              <p class="card-text">Discover India's best events & concerts</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- <div class="container">
+    <h1 class="my-4">Menu</h1>
+    <div class="row">
+        {% for item in menu_items %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <img src="{{ item.image_url }}" class="card-img-top" alt="{{ item.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text">{{ item.description }}</p>
+                    <p class="card-text">Price: ${{ item.price }}</p>
+                    <a href="#" class="btn btn-primary">Order Now</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div> 
+</div> -->
+
+
+
+
+    <a href="/book_table">Book a Table</a>
+    <a href="/make_payment">Make Payment</a>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .menu-image {
+            width: 100px; /* Adjust width as needed */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Menu</h1>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Order</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in menu_items %}
+                <tr>
+                    <td><img src="{{ item.image_url }}" alt="{{ item.name }}" class="menu-image"></td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>${{ item.price }}</td>
+                    <td><a href="#" class="btn btn-primary">Order Now</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No menu items available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+<div class="container">
+    <h1 class="my-4">Menu</h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in menu_items %}
+            <tr>
+                <td><img src="{{ item.image_url }}" alt="{{ item.name }}" style="width: 100px;"></td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>${{ item.price }}</td>
+                <td><a href="/order/{{ item.menu_id }}" class="btn btn-primary">Order Now</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+New
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        h1, h3 {
+            color: #FFFFFF;
+        }
+
+        /* Navbar/Heading Section */
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .dashboard-section {
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: #2B2B2B;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px;
+            display: inline-block;
+            width: calc(33% - 20px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #EAEAEA;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .btn {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #FF6936;
+        }
+
+        /* Booking Table Form */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FF4B2B;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Customer Dashboard</h1>
+        </div>
+
+        <!-- Booking Section -->
+        <div class="dashboard-section">
+            <h3>Book a Table</h3>
+            <form method="POST" action="/book_table">
+                <div class="form-group">
+                    <label for="tableNumber">Table Number</label>
+                    <input type="number" class="form-control" id="tableNumber" name="table_number" required>
+                </div>
+                <button type="submit" class="btn">Book Table</button>
+            </form>
+        </div>
+
+        <!-- Offers Section -->
+        <div class="dashboard-section">
+            <h3>Current Offers</h3>
+            <div class="card">
+                <h4>20% Off on All Orders</h4>
+                <p>Valid till the end of this month!</p>
+            </div>
+            <div class="card">
+                <h4>Buy 1 Get 1 Free</h4>
+                <p>On selected items. Check the menu!</p>
+            </div>
+            <div class="card">
+                <h4>Free Dessert with Every Order</h4>
+                <p>Order now to enjoy your free treat!</p>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="dashboard-section">
+            <h3>Menu Items</h3>
+            <div class="card">
+                <h4>Pizza</h4>
+                <p>$12.99</p>
+                <button class="btn" onclick="orderItem('Pizza')">Order Now</button>
+            </div>
+            <div class="card">
+                <h4>Burger</h4>
+                <p>$8.99</p>
+                <button class="btn" onclick="orderItem('Burger')">Order Now</button>
+            </div>
+            <div class="card">
+                <h4>Pasta</h4>
+                <p>$10.99</p>
+                <button class="btn" onclick="orderItem('Pasta')">Order Now</button>
+            </div>
+        </div>
+
+        <script>
+            function orderItem(itemName) {
+                // Logic to place the order
+                alert(`You have ordered ${itemName}!`);
+                // Here you can make an AJAX call to place the order
+                // You should include the table number and update the relevant dashboards
+            }
+        </script>
+    </div>
+
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .form-section {
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+
+        .btn {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #FF6936;
+        }
+
+        .menu-section {
+            margin-top: 20px;
+        }
+
+        .menu-item {
+            background-color: #1E1E1E;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Customer Dashboard</h1>
+        </div>
+
+        <!-- Table Booking Section -->
+        <div class="form-section">
+            <h3>Book a Table</h3>
+            <form method="POST" action="/book_table">
+                <div class="form-group">
+                    <label for="customerName">Your Name</label>
+                    <input type="text" class="form-control" id="customerName" name="customer_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="numberOfPeople">Number of People</label>
+                    <input type="number" class="form-control" id="numberOfPeople" name="number_of_people" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingDate">Booking Date</label>
+                    <input type="date" class="form-control" id="bookingDate" name="booking_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingTime">Booking Time</label>
+                    <input type="time" class="form-control" id="bookingTime" name="booking_time" required>
+                </div>
+                <button type="submit" class="btn">Book Table</button>
+            </form>
+            
+        </div>
+
+        <!-- Menu Items Section -->
+        <div class="menu-section">
+            <h3>Available Menu Items</h3>
+            {% for item in menu_items %}
+            <div class="menu-item">
+                <span>{{ item.name }} - ${{ item.price }}</span>
+                <button class="btn" onclick="placeOrder({{ item.menu_id }})">Order Now</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Payment Section -->
+    <div class="form-section">
+        <h3>Make a Payment</h3>
+        <!-- <form method="POST" action="/make_payment">
+            <div class="form-group">
+                <label for="orderId">Order ID</label>
+                <input type="number" class="form-control" id="orderId" name="order_id" required>
+            </div>
+            <div class="form-group">
+                <label for="paymentAmount">Amount</label>
+                <input type="number" class="form-control" id="paymentAmount" name="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="paymentMethod">Payment Method</label>
+                <select class="form-control" id="paymentMethod" name="payment_method" required>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="PayPal">PayPal</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Make Payment</button>
+        </form> -->
+        <!-- Assume you have fetched and stored the last order_id in a variable called 'order_id' -->
+        <form method="POST" action="/make_payment">
+            <div class="form-group">
+                <label for="paymentAmount">Amount</label>
+                <input type="number" class="form-control" id="paymentAmount" name="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="paymentMethod">Payment Method</label>
+                <select class="form-control" id="paymentMethod" name="payment_method" required>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="PayPal">PayPal</option>
+                </select>
+            </div>
+            <input type="hidden" name="order_id" value="{{ order_id }}">
+            <button type="submit" class="btn">Make Payment</button>
+        </form>
+
+    </div>
+
+
+    <!-- <script>
+        function placeOrder(menuId) {
+            const customerName = document.getElementById('customerName').value;
+            const numberOfPeople = document.getElementById('numberOfPeople').value;
+            const bookingDate = document.getElementById('bookingDate').value;
+            const bookingTime = document.getElementById('bookingTime').value;
+
+            // Ensure that the customer has booked a table before placing an order
+            if (!customerName || !numberOfPeople || !bookingDate || !bookingTime) {
+                alert("Please book a table first.");
+                return;
+            }
+
+            // Placeholder for order quantity; you can customize this based on your requirements
+            const orderQuantity = 1;
+
+            fetch('/place_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `customer_name=${customerName}&menu_id=${menuId}&quantity=${orderQuantity}&booking_date=${bookingDate}&booking_time=${bookingTime}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script> -->
+
+    <script>
+        document.querySelector("#bookTableForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData(this);
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/book_table", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert("Table booked successfully!");
+                } else {
+                    alert("Failed to book table. Try again!");
+                }
+            };
+            xhr.send(formData);
+        });
+    </script>
+
+    <script>
+        document.querySelector("#orderForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData(this);
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/place_order", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert("Order placed successfully!");
+                } else {
+                    alert("Failed to place order. Try again!");
+                }
+            };
+            xhr.send(formData);
+        });
+    </script>
+
+    <script>
+        document.querySelector("#paymentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData(this);
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/make_payment", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert("Payment successful!");
+                } else {
+                    alert("Payment failed. Try again!");
+                }       
+            };
+            xhr.send(formData);
+        });
+    </script>
+
+
+
+
+    
+
+</body>
+</html>
+
+
+
+finalll
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .form-section {
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+
+        .btn {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #FF6936;
+        }
+
+        .menu-section {
+            margin-top: 20px;
+        }
+
+        .menu-item {
+            background-color: #1E1E1E;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Customer Dashboard</h1>
+        </div>
+
+        <!-- Table Booking Section -->
+        <div class="form-section">
+            <h3>Book a Table</h3>
+            <form id="bookTableForm" method="POST" action="/book_table">
+                <div class="form-group">
+                    <label for="customerName">Your Name</label>
+                    <input type="text" class="form-control" id="customerName" name="customer_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="numberOfPeople">Number of People</label>
+                    <input type="number" class="form-control" id="numberOfPeople" name="number_of_people" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingDate">Booking Date</label>
+                    <input type="date" class="form-control" id="bookingDate" name="booking_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingTime">Booking Time</label>
+                    <input type="time" class="form-control" id="bookingTime" name="booking_time" required>
+                </div>
+                <button type="submit" class="btn">Book Table</button>
+            </form>
+        </div>
+
+        <!-- Menu Items Section -->
+        <div class="menu-section">
+            <h3>Available Menu Items</h3>
+            {% for item in menu_items %}
+            <div class="menu-item">
+                <span>{{ item.name }} - ${{ item.price }}</span>
+                <button class="btn" onclick="placeOrder({{ item.menu_id }})">Order Now</button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Payment Section -->
+        <div class="form-section">
+            <h3>Make a Payment</h3>
+            <form id="paymentForm" method="POST" action="/make_payment">
+                <div class="form-group">
+                    <label for="paymentAmount">Amount</label>
+                    <input type="number" class="form-control" id="paymentAmount" name="amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method</label>
+                    <select class="form-control" id="paymentMethod" name="payment_method" required>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="PayPal">PayPal</option>
+                    </select>
+                </div>
+                <input type="hidden" name="order_id" value="{{ order_id }}">
+                <button type="submit" class="btn">Make Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript for handling form submissions -->
+    <script>
+        // Table booking submission
+        // document.getElementById('bookTableForm').addEventListener('submit', function(event) {
+        //     event.preventDefault();
+
+        //     let formData = new FormData(this);
+        //     fetch('/book_table', {
+        //         method: 'POST',
+        //         body: formData
+        //     })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             alert('Table booked successfully!');
+        //         } else {
+        //             alert('Failed to book table. Try again!');
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
+        // });
+        document.querySelector("#bookTableForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(this);
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/book_table", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert("Table booked successfully!");
+                    // Save the booking state in localStorage to allow order placement
+                    localStorage.setItem("tableBooked", true);
+                } else {
+                    alert("Failed to book table. Try again!");
+                }
+            };
+            xhr.send(formData);
+        });
+
+
+        // Placing an order
+        // function placeOrder(menuId) {
+        //     const customerName = document.getElementById('customerName').value;
+        //     if (!customerName) {
+        //         alert('Please book a table first.');
+        //         return;
+        //     }
+
+        //     let formData = new FormData();
+        //     formData.append('menu_id', menuId);
+        //     formData.append('customer_name', customerName);
+
+        //     fetch('/place_order', {
+        //         method: 'POST',
+        //         body: formData
+        //     })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             alert('Order placed successfully!');
+        //         } else {
+        //             alert('Failed to place order. Try again!');
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
+        // }
+
+        function placeOrder(menuId) {
+            // Check if the table is booked from localStorage
+            if (!localStorage.getItem("tableBooked")) {
+                alert("Please book a table first.");
+                return;
+            }
+
+            const orderQuantity = 1; // Define your order quantity as needed
+
+            fetch('/place_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `menu_id=${menuId}&quantity=${orderQuantity}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Order placed successfully!");
+                    // Store order_id in localStorage or pass it to payment form
+                    localStorage.setItem("order_id", data.order_id); // Assuming data.order_id contains the ID
+                } else {
+                    alert("Failed to place order. Try again!");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+
+
+        // Payment submission
+        // document.getElementById('paymentForm').addEventListener('submit', function(event) {
+        //     event.preventDefault();
+
+        //     let formData = new FormData(this);
+        //     fetch('/make_payment', {
+        //         method: 'POST',
+        //         body: formData
+        //     })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             alert('Payment successful!');
+        //         } else {
+        //             alert('Payment failed. Try again!');
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
+        // });
+
+        document.querySelector("#paymentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData(this);
+            formData.append('order_id', localStorage.getItem("order_id")); // Ensure the order_id is sent
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/make_payment", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert("Payment successful!");
+                } else {
+                    alert("Payment failed. Try again!");
+                }       
+            };
+            xhr.send(formData);
+        });
+
+    </script>
+
+</body>
+</html>
+
+
+finale
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        .header {
+            background-color: #FF4B2B;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .form-section {
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section h3 {
+            color: #FF4B2B;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+
+        .btn {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #FF6936;
+        }
+
+        .menu-section, .cart-section {
+            margin-top: 20px;
+        }
+
+        .menu-item, .cart-item {
+            background-color: #1E1E1E;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item span {
+            flex-grow: 1;
+        }
+
+        .cart-controls {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Customer Dashboard</h1>
+        </div>
+
+        <!-- Table Booking Section -->
+        <div class="form-section">
+            <h3>Book a Table</h3>
+            <form method="POST" action="/book_table">
+                <div class="form-group">
+                    <label for="customerName">Your Name</label>
+                    <input type="text" class="form-control" id="customerName" name="customer_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="numberOfPeople">Number of People</label>
+                    <input type="number" class="form-control" id="numberOfPeople" name="number_of_people" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingDate">Booking Date</label>
+                    <input type="date" class="form-control" id="bookingDate" name="booking_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingTime">Booking Time</label>
+                    <input type="time" class="form-control" id="bookingTime" name="booking_time" required>
+                </div>
+                <button type="submit" class="btn">Book Table</button>
+            </form>
+        </div>
+
+        <!-- Menu Items Section -->
+        <div class="menu-section">
+            <h3>Available Menu Items</h3>
+            {% for item in menu_items %}
+            <div class="menu-item">
+                <span>{{ item.name }} - ${{ item.price }}</span>
+                <input type="number" id="quantity_{{ item.menu_id }}" value="1" min="1" class="form-control" style="width: 50px;">
+                <button class="btn" onclick="addToCart({{ item.menu_id }})">Add to Cart</button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Cart Section with Editing Options -->
+        <div class="cart-section">
+            <h3>Your Cart</h3>
+            <div id="cartItems">
+                <!-- Cart items will be dynamically injected here -->
+            </div>
+            <button class="btn" onclick="placeOrder()">Place Order</button>
+        </div>
+    </div>
+
+    <script>
+        // AddToCart and LoadCart Scripts Here
+        function addToCart(menuId) {
+            const quantity = document.getElementById(`quantity_${menuId}`).value;
+
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `menu_id=${menuId}&quantity=${quantity}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadCart();  // Update cart after adding items
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function loadCart() {
+            fetch('/view_cart')
+            .then(response => response.json())
+            .then(data => {
+                const cartItems = document.getElementById('cartItems');
+                cartItems.innerHTML = '';  // Clear current cart
+                Object.keys(data).forEach(menuId => {
+                    const quantity = data[menuId];
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    cartItem.innerHTML = `
+                        <span>Item ID: ${menuId}, Quantity: ${quantity}</span>
+                        <div class="cart-controls">
+                            <button class="btn" onclick="updateCart(${menuId}, 'increase')">+</button>
+                            <button class="btn" onclick="updateCart(${menuId}, 'decrease')">-</button>
+                            <button class="btn" onclick="removeFromCart(${menuId})">Remove</button>
+                        </div>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+            });
+        }
+
+        function updateCart(menuId, action) {
+            fetch('/update_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `menu_id=${menuId}&action=${action}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadCart();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function removeFromCart(menuId) {
+            fetch('/remove_from_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `menu_id=${menuId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadCart();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Initialize the cart when the page loads
+        window.onload = loadCart;
+
+
+        function placeOrder() {
+            const customerName = document.getElementById('customerName').value;
+            if (!customerName) {
+                alert("Please enter your name and book a table before placing an order.");
+                return;
+            }
+
+            // Send cart data to backend
+            fetch('/place_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customer_name: customerName,
+                    cart: cart,  // Cart object containing menu items and quantities
+                    total_amount: totalAmount  // Total amount of the order
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.message === 'Order placed successfully') {
+                    cart = {};  // Clear the cart
+                    updateCartUI();  // Update the cart UI
+                }
+            })
+            .catch(error => {
+                console.error('Error placing order:', error);
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
+
+
+
+finalleelel with Cart
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #EAEAEA;
+        }
+        .container {
+            margin: 20px;
+        }
+        .btn {
+            background-color: #FF4B2B;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Menu</h1>
+        <div id="menu-items">
+            <!-- Sample menu items -->
+            <div>
+                <span>Burger - $10</span>
+                <button class="btn" onclick="addToCart(1, 'Burger', 10)">Add to Cart</button>
+            </div>
+            <div>
+                <span>Pizza - $15</span>
+                <button class="btn" onclick="addToCart(2, 'Pizza', 15)">Add to Cart</button>
+            </div>
+        </div>
+
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <button class="btn" onclick="placeOrder()">Place Order</button>
+    </div>
+
+    <script>
+        const cart = [];
+
+        function addToCart(menuId, name, price) {
+            const item = { menu_id: menuId, name: name, price: price, quantity: 1 };
+            cart.push(item);
+            displayCart();
+        }
+
+        function displayCart() {
+            const cartDiv = document.getElementById('cart-items');
+            cartDiv.innerHTML = '';
+            cart.forEach(item => {
+                cartDiv.innerHTML += `<div>${item.name} - $${item.price} x ${item.quantity}</div>`;
+            });
+        }
+
+        function placeOrder() {
+            fetch('/place_order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            });
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+<!-- Cart UI (HTML + JS) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #EAEAEA;
+        }
+        .container {
+            margin: 20px;
+        }
+        .btn {
+            background-color: #FF4B2B;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Menu</h1>
+        <div id="menu-items">
+            <!-- Sample menu items -->
+            <div>
+                <span>Burger - $10</span>
+                <button class="btn" onclick="addToCart(1, 'Burger', 10)">Add to Cart</button>
+            </div>
+            <div>
+                <span>Pizza - $15</span>
+                <button class="btn" onclick="addToCart(2, 'Pizza', 15)">Add to Cart</button>
+            </div>
+        </div>
+
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <button class="btn" onclick="placeOrder()">Place Order</button>
+    </div>
+
+    <script>
+        const cart = [];
+
+        function addToCart(menuId, name, price) {
+            const item = { menu_id: menuId, name: name, price: price, quantity: 1 };
+            cart.push(item);
+            displayCart();
+        }
+
+        function displayCart() {
+            const cartDiv = document.getElementById('cart-items');
+            cartDiv.innerHTML = '';
+            cart.forEach(item => {
+                cartDiv.innerHTML += `<div>${item.name} - $${item.price} x ${item.quantity}</div>`;
+            });
+        }
+
+        function placeOrder() {
+            fetch('/place_order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            });
+        }
+    </script>
+
+</body>
+</html>
+
+chef.html 
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chef_style.css') }}">
+    <script src="{{ url_for('static', filename='js/chef_script.js') }}"></script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <h1>Restaurant App</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/admin">Admin</a></li>
+            <li><a href="/staff_dashboard">Staff</a></li>
+            <li><a href="/chef_dashboard" class="active">Chef</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="dashboard">
+        <h2>Current Orders</h2>
+
+        <!-- Orders Section -->
+        <div id="order-list" class="order-container">
+            <!-- Example of an Order Card -->
+            <div class="order-card">
+                <h3>Order #12345</h3>
+                <p>Items: Pizza, Salad</p>
+                <p>Table: 12</p>
+                <button class="mark-ready-btn">Mark as Ready</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Logic for Notifications -->
+    <script>
+        // Simulate notification from staff when an order is placed
+        setTimeout(function() {
+            notifyChef("New Order Placed: Order #12346 (Burger, Fries)");
+        }, 5000); // Mock delay for order notification
+
+        function notifyChef(orderDetails) {
+            let orderList = document.getElementById("order-list");
+            let orderCard = document.createElement("div");
+            orderCard.classList.add("order-card");
+
+            orderCard.innerHTML = `
+                <h3>${orderDetails}</h3>
+                <p>Items: Burger, Fries</p>
+                <p>Table: 7</p>
+                <button class="mark-ready-btn">Mark as Ready</button>
+            `;
+
+            orderList.appendChild(orderCard);
+        }
+    </script>
+
+</body>
+</html>
+
+new new
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Chef Dashboard</title>
+    <style>
+        body {
+            background-color: #f0f0f0; /* Light grey background */
+            color: #333;
+        }
+        .dashboard-container {
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #fff; /* White card background */
+            border: 1px solid #e1e1e1; /* Light border for cards */
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .header {
+            background-color: #d9534f; /* Primary color (red) */
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+        .header h2 {
+            margin: 0;
+        }
+        .pending-orders, .inventory {
+            padding: 15px;
+        }
+        .order-button {
+            margin-top: 10px;
+        }
+        .notification {
+            background-color: #d1ecf1; /* Light blue notification */
+            border-color: #bee5eb; /* Border color */
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .icon {
+            font-size: 20px; /* Larger icon size */
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="card">
+        <div class="header">
+            <h2>Chef Dashboard</h2>
+        </div>
+        <div class="pending-orders">
+            <h5><i class="icon fas fa-list"></i>Pending Orders</h5>
+            <div class="notification">
+                <strong>New Order Alert!</strong> You have 2 new orders waiting for your attention.
+            </div>
+            <ul class="list-group">
+                <!-- Loop through pending orders -->
+                {% for order in pending_orders %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Order #{{ order.order_id }} - {{ order.menu_item_name }}
+                    <button class="btn btn-success btn-sm order-button" onclick="markAsPrepared({{ order.order_id }})">Mark as Prepared</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="header">
+            <h5><i class="icon fas fa-utensils"></i>Available Kitchen Items</h5>
+        </div>
+        <div class="inventory">
+            <ul class="list-group">
+                <!-- Loop through available items in the kitchen -->
+                {% for item in available_items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ item.name }} - Stock: {{ item.stock }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="header">
+            <h5><i class="icon fas fa-box"></i>Inventory Stock</h5>
+        </div>
+        <div class="inventory">
+            <ul class="list-group">
+                <!-- Loop through inventory stock -->
+                {% for stock in inventory %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ stock.item_name }} - Quantity: {{ stock.quantity }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function markAsPrepared(orderId) {
+        // Function to mark an order as prepared
+        if (confirm("Are you sure you want to mark this order as prepared?")) {
+            // Make an AJAX call to update the order status
+            fetch(`/prepare_order/${orderId}`, {
+                method: 'POST',
+            }).then(response => {
+                if (response.ok) {
+                    alert("Order marked as prepared!");
+                    location.reload(); // Reload the page to update the order list
+                } else {
+                    alert("An error occurred while marking the order.");
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>
+
+
+
+
+newer
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Chef Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f8f8f8; /* Light gray background for a soft look */
+            color: #333; /* Darker text for readability */
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ff4742; /* Red theme similar to Zomato */
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+        }
+
+        .banner {
+            background-color: #ff6b6b; /* A lighter red for the banner */
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .carousel {
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .carousel-item {
+            margin: 0 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .notifications {
+            background-color: #e9e9e9; /* Light background for notifications */
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .notification {
+            background-color: #ffd700; /* Gold for notifications */
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .orders, .inventory {
+            background-color: #ffffff; /* White boxes for content sections */
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ff4742; /* Header with Zomato color */
+            color: white;
+        }
+
+        .btn-prepare {
+            background-color: #28a745; /* Green button for action */
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-prepare:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header class="dashboard-header">
+            <h1>Chef Dashboard</h1>
+            <nav>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </header>
+
+        <div class="banner">
+            <h2>Today's Specials!</h2>
+            <div class="carousel">
+                <div class="carousel-item">🧑‍🍳 Special Dish 1</div>
+                <div class="carousel-item">🍽️ Special Dish 2</div>
+                <div class="carousel-item">🥗 Special Dish 3</div>
+            </div>
+        </div>
+
+        <div class="notifications">
+            <h2>Notifications</h2>
+            <ul>
+                {% for notification in notifications %}
+                <li class="notification">{{ notification.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="orders">
+            <h2>Pending Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Dish Name</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in pending_orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.dish_name }}</td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>
+                            <form action="{{ url_for('prepare_order', order_id=order.order_id) }}" method="POST">
+                                <button type="submit" class="btn-prepare">Mark as Prepared</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="inventory">
+            <h2>Available Kitchen Items</h2>
+            <ul>
+                {% for item in kitchen_inventory %}
+                <li>{{ item.name }} - {{ item.quantity }} available</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Your Restaurant Name</p>
+        </footer>
+    </div>
+</body>
+</html>
+
+
+finalll
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #e83e8c; /* Primary color similar to Swiggy */
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            color: #343a40;
+        }
+
+        .card p {
+            margin: 5px 0;
+        }
+
+        .button {
+            background-color: #28a745; /* Green color for buttons */
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .notifications {
+            background: #fff3cd; /* Notification background color */
+            border: 1px solid #ffeeba;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #856404;
+        }
+
+        .offers {
+            background: #d4edda; /* Offer background color */
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #155724;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin: 20px 0;
+        }
+
+        .carousel div {
+            background: #007bff; /* Carousel item background color */
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-right: 10px;
+            flex: none;
+            width: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Chef Dashboard</h1>
+        <a href="{{ url_for('logout') }}" class="button">Logout</a>
+    </header>
+
+    <div class="container">
+        <div class="notifications">
+            <strong>Notifications:</strong>
+            <p>You have new orders to prepare!</p>
+        </div>
+
+        <div class="offers">
+            <strong>Special Offers:</strong>
+            <p>Get 20% off on your next meal!</p>
+        </div>
+
+        <h2>Pending Orders</h2>
+        <div class="carousel">
+            {% for order in pending_orders %}
+                <div class="card">
+                    <h3>Order #{{ order.id }}</h3>
+                    <p>Customer: {{ order.customer_name }}</p>
+                    <p>Items: {{ order.items }}</p>
+                    <p>Status: {{ order.status }}</p>
+                    <button class="button">Mark as Prepared</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h2>Kitchen Inventory</h2>
+        <div class="carousel">
+            {% for item in kitchen_inventory %}
+                <div class="card">
+                    <h3>{{ item.name }}</h3>
+                    <p>Available: {{ item.stock }}</p>
+                    <p>Unit: {{ item.unit }}</p>
+                    <button class="button">Update Stock</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h2>Available Menu Items</h2>
+        <div class="carousel">
+            {% for menu_item in menu_items %}
+                <div class="card">
+                    <h3>{{ menu_item.name }}</h3>
+                    <p>Price: ${{ menu_item.price }}</p>
+                    <p>Description: {{ menu_item.description }}</p>
+                    <button class="button">Add to Specials</button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+
+
+staff.html 
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff Dashboard</title>
+</head>
+<body>
+    <h1>Pending Orders</h1>
+    <ul>
+        {% for order in orders %}
+            <li>Order ID: {{ order.order_id }} - Customer: {{ order.customer_id }} - Status: {{ order.status }}
+                <form action="/update_order_status/{{ order.order_id }}" method="POST">
+                    <input type="submit" value="Mark as Prepared">
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Staff Dashboard</h1>
+    <section id="orders">
+        <h2>Take Orders</h2>
+        <form id="orderForm">
+            <!-- Menu items selection -->
+            <button type="submit">Place Order</button>
+        </form>
+    </section>
+
+    <section id="notifications">
+        <h2>Order Notifications</h2>
+        <div id="notificationArea">
+            <!-- JS will populate this with alerts when food is ready -->
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <link rel="stylesheet" href="static/styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Staff Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/orders">Orders</a></li>
+                <li><a href="/tables">Tables</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="employee-details">
+            <h2>Your Details</h2>
+            <p>Name: {{ employee.name }}</p>
+            <p>Email: {{ employee.email }}</p>
+            <p>Role: {{ employee.role }}</p>
+        </section>
+
+        <section id="order-status">
+            <h2>Order Status</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>
+                            {% if order.status == 'pending' %}
+                                <button onclick="prepareOrder({{ order.order_id }})">Prepare</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="pending-orders">
+            <h2>Pending Orders</h2>
+            <ul>
+                {% for order in pending_orders %}
+                <li>Order ID: {{ order.order_id }} - Customer: {{ order.customer_name }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section id="vacant-tables">
+            <h2>Vacant Tables</h2>
+            <ul>
+                {% for table in vacant_tables %}
+                <li>Table Number: {{ table.table_number }} - Seats: {{ table.seats }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section id="order-notifications">
+            <h2>Order Notifications</h2>
+            <ul id="notifications">
+                {% for notification in notifications %}
+                <li>{{ notification.message }} - Order ID: {{ notification.order_id }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Your Restaurant Name</p>
+    </footer>
+
+    <script>
+        function prepareOrder(orderId) {
+            // Send request to backend to mark order as prepared
+            fetch(`/prepare_order/${orderId}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Order prepared successfully!");
+                        // Optionally, refresh the order status or remove the order from the list
+                        location.reload();
+                    } else {
+                        alert("Failed to prepare order.");
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
+
+
+new code
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <link rel="stylesheet" href="static/styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Staff Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/orders">Orders</a></li>
+                <li><a href="/tables">Tables</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="employee-details">
+            <h2>Your Details</h2>
+            <p>Name: {{ employee.name }}</p>
+            <p>Email: {{ employee.email }}</p>
+            <p>Role: {{ employee.role }}</p>
+        </section>
+
+        <section id="order-status">
+            <h2>Order Status</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>
+                            {% if order.status == 'pending' %}
+                                <button onclick="prepareOrder({{ order.order_id }})">Prepare</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="pending-orders">
+            <h2>Pending Orders</h2>
+            <ul>
+                {% for order in pending_orders %}
+                <li>Order ID: {{ order.order_id }} - Customer: {{ order.customer_name }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section id="vacant-tables">
+            <h2>Vacant Tables</h2>
+            <ul>
+                {% for table in vacant_tables %}
+                <li>Table Number: {{ table.table_number }} - Seats: {{ table.seats }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section id="order-notifications">
+            <h2>Order Notifications</h2>
+            <ul id="notifications">
+                {% for notification in notifications %}
+                <li>{{ notification.message }} - Order ID: {{ notification.order_id }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Your Restaurant Name</p>
+    </footer>
+
+    <script>
+        function prepareOrder(orderId) {
+            // Send request to backend to mark order as prepared
+            fetch(`/prepare_order/${orderId}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Order prepared successfully!");
+                        // Optionally, refresh the order status or remove the order from the list
+                        location.reload();
+                    } else {
+                        alert("Failed to prepare order.");
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
+

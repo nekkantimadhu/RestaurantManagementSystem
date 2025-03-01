@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f7f3e9; /* Cream background */
+            color: #333; /* Dark text color */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        .header {
+            background-color: #FF6F61;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        .cart-icon {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            color: #FFFFFF;
+        }
+
+        .card-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #FFFFFF;
+            padding: 20px;
+            flex: 1;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .form-section, .menu-section, .cart-section {
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section h3, .menu-section h3, .cart-section h3 {
+            color: #FF6F61;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ffffff;
+            background-color: #f5f5f5;
+            color: #333333;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item input {
+            width: 60px;
+            text-align: center;
+        }
+        
+        .menu-item:hover {
+            transform: scale(1.05);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cart-item:hover {
+            transform: scale(1.05);
+        }
+
+        .card i {
+            font-size: 24px; /* Adjust the size of the icons */
+            margin-right: 10px; /* Add spacing between icon and text */
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Customer Dashboard</h1>
+            <div class="cart-icon">🛒</div>
+        </div>
+        <br>
+
+        <!-- Cards Section -->
+        <div class="card-section">
+            <div class="card" onclick="showSection('bookTableSection')"><i class="bi bi-calendar-plus"></i>Book a Table</div>
+            <div class="card" onclick="showSection('menuSection')"><i class="bi bi-list"></i>View Menu</div>
+            <div class="card" onclick="showSection('cartSection')"><i class="bi bi-basket"></i>Place an Order</div>
+        </div>
+
+        <!-- Table Booking Section -->
+        <div class="form-section" id="bookTableSection" style="display:none;">
+            <h3>Book a Table</h3>
+            <form method="POST" action="/book_table" onsubmit="return bookTable(event)">
+                <div class="form-group">
+                    <label for="customerName">Your Name</label>
+                    <input type="text" class="form-control" id="customerName" name="customer_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="numberOfPeople">Number of People</label>
+                    <input type="number" class="form-control" id="numberOfPeople" name="number_of_people" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingDate">Booking Date</label>
+                    <input type="date" class="form-control" id="bookingDate" name="booking_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingTime">Booking Time</label>
+                    <input type="time" class="form-control" id="bookingTime" name="booking_time" required>
+                </div>
+                <button type="submit" class="btn">Book Table</button>
+            </form>
+        </div>
+
+        <!-- Menu Items Section -->
+        <div class="menu-section" id="menuSection" style="display:none;">
+            <h3>Available Menu Items</h3>
+            {% for item in menu_items %}
+            <div class="menu-item">
+                <span>{{ item.name }} - ${{ item.price }}</span>
+                <input type="number" id="quantity_{{ item.menu_id }}" value="1" min="1" class="form-control">
+                <button class="btn" onclick="addToCart({{ item.menu_id }})">Add to Cart</button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Cart Section -->
+        <!-- Cart Section -->
+<div class="cart-section" id="cartSection" style="display:none;">
+    <h3>Your Cart</h3>
+    <div id="cartItems">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>${{ item.price * item.quantity }}</td>
+                    <!-- <td>
+                        <form action="{{ url_for('remove_from_cart') }}" method="POST">
+                            <input type="hidden" name="menu_id" value="{{ item.menu_id }}">
+                            <button type="submit">Remove</button>
+                        </form>
+                        <form action="{{ url_for('update_cart') }}" method="POST">
+                            <input type="hidden" name="menu_id" value="{{ item.menu_id }}">
+                            <input type="hidden" name="action" value="increase">
+                            <button type="submit">+</button>
+                        </form>
+                        <form action="{{ url_for('update_cart') }}" method="POST">
+                            <input type="hidden" name="menu_id" value="{{ item.menu_id }}">
+                            <input type="hidden" name="action" value="decrease">
+                            <button type="submit">-</button>
+                        </form>
+                    </td> -->
+                    <td>
+                        <button class="btn" onclick="updateCart(${item.menu_id}, 'increase')">+</button>
+                        <button class="btn" onclick="updateCart(${item.menu_id}, 'decrease')">-</button>
+                        <button class="btn" onclick="removeFromCart(${item.menu_id})">Remove</button>
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button class="btn" onclick="placeOrder()">Place Order</button>
+</div>
+
+
+    <script>
+        // AddToCart and LoadCart Scripts Here
+        function addToCart(menuId) {
+            const quantity = document.getElementById(`quantity_${menuId}`).value;
+
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `menu_id=${menuId}&quantity=${quantity}`
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                loadCart();  // Refresh the cart after adding
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while adding to cart: ' + error.message);
+            });
+        }
+
+
+        function loadCart() {
+            fetch('/view_cart')
+            .then(response => response.json())
+            .then(data => {
+                const cartItems = document.getElementById('cartItems');
+                cartItems.innerHTML = '';
+                data.forEach(item => {
+                    const cartItem = document.createElement('tr');
+                    cartItem.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>$${item.price}</td>
+                        <td>$${item.price * item.quantity}</td>
+                        <td>
+                            <button class="btn" onclick="updateCart(${item.menu_id}, 'increase')">+</button>
+                            <button class="btn" onclick="updateCart(${item.menu_id}, 'decrease')">-</button>
+                            <button class="btn" onclick="removeFromCart(${item.menu_id})">Remove</button>
+                        </td>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+            });
+        }
+
+
+        // Function to update cart
+        // function updateCart(menuId, action) {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '/update_cart',
+        //         data: { menu_id: menuId, action: action },
+        //         success: function(response) {
+        //             alert(response.message);
+        //             // Optionally, refresh the cart display here
+        //         },
+        //         error: function(xhr) {
+        //             alert(xhr.responseJSON.message);
+        //         }
+        //     });
+        // }
+
+        function updateCart(menuId, action) {
+            fetch('/update_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `menu_id=${menuId}&action=${action}`
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                loadCart();  // Refresh the cart after updating
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the cart: ' + error.message);
+            });
+        }
+
+
+        // Function to remove item from cart
+        // function removeFromCart(menuId) {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '/remove_from_cart',
+        //         data: { menu_id: menuId },
+        //         success: function(response) {
+        //             alert(response.message);
+        //             // Optionally, refresh the cart display here
+        //         },
+        //         error: function(xhr) {
+        //             alert(xhr.responseJSON.message);
+        //         }
+        //     });
+        // }
+
+        function removeFromCart(menuId) {
+            fetch('/remove_from_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `menu_id=${menuId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadCart();  // Refresh the cart after removing
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while removing from cart: ' + error.message);
+            });
+        }
+
+
+
+        function placeOrder() {
+            fetch('/place_order', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadCart();
+            });
+        }
+
+        loadCart();
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.getElementById('bookTableSection').style.display = 'none';
+            document.getElementById('menuSection').style.display = 'none';
+            document.getElementById('cartSection').style.display = 'none';
+            
+            // Show the selected section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        function bookTable(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const customerName = document.getElementById('customerName').value;
+            const numberOfPeople = document.getElementById('numberOfPeople').value;
+            const bookingDate = document.getElementById('bookingDate').value;
+            const bookingTime = document.getElementById('bookingTime').value;
+
+            fetch('/book_table', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `customer_name=${customerName}&number_of_people=${numberOfPeople}&booking_date=${bookingDate}&booking_time=${bookingTime}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); // Show alert for booking status
+                if (data.message === 'Table booked successfully!') {
+                    // Clear the form fields if needed
+                    document.getElementById('customerName').value = '';
+                    document.getElementById('numberOfPeople').value = '';
+                    document.getElementById('bookingDate').value = '';
+                    document.getElementById('bookingTime').value = '';
+                }
+            })
+            .catch(error => {
+                console.error('Error booking table:', error);
+                alert('Error booking table');
+            });
+
+            return false; // Return false to prevent further action
+        }
+
+
+    </script>
+</body>
+</html>

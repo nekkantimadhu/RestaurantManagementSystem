@@ -1,0 +1,43 @@
+body {
+    background-color: #1d1f21;
+    color: white;
+}
+
+h2, h3 {
+    color: #39d353;
+}
+
+.navbar-brand {
+    color: #39d353 !important;
+}
+
+.list-group-item {
+    background-color: #25272a;
+    border: none;
+}
+
+.btn-success {
+    background-color: #39d353;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #2ebf47;
+}
+
+.form-control.bg-dark {
+    background-color: #25272a;
+    color: white;
+    border: none;
+}
+
+.form-control.bg-dark:focus {
+    border-color: #39d353;
+    box-shadow: none;
+}
+
+
+newnew
+
+
+
